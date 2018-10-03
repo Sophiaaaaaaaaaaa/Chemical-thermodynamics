@@ -2,41 +2,41 @@
 #include <math.h>
 int main()
 {
-	double Vm,B,C,R,T,P,Tc,Pc,w,a,b,d,e,m;
+	double Vm,B,C,R,T,P,Tc,Pc,w,a,b,d,e,m,A;
 	R=8.314;
 	float V[500];
 	int i=0,c,yn;
-	printf ("ÇëÑ¡ÔñÄú¼ÆËãµÄ·½³Ì£º1 Î¬Àï·½³Ì 2 R-K·½³Ì 3 SRK·½³Ì");
+	printf ("è¯·é€‰æ‹©æ‚¨è®¡ç®—çš„æ–¹ç¨‹(å‰å››ä¸ªæ˜¯è®¡ç®—æ‘©å°”ä½“ç§¯åä¸‰ä¸ªæ˜¯è®¡ç®—)Pï¼š1 ç»´é‡Œæ–¹ç¨‹ 2 R-Kæ–¹ç¨‹ 3 SRKæ–¹ç¨‹  4 P-Ræ–¹ç¨‹ 5 R-K 6 SRK 7P-R");
 	scanf ("%d",&c);
 	if (c==1)
 	{
-	 printf("ÇëÒÀ´ÎÊäÈë B C T PÖµ");
+	 printf("è¯·ä¾æ¬¡è¾“å…¥ B C T På€¼");
 	 scanf("%lf%lf%lf%lf",&B,&C,&T,&P) ;
 	 V[0]=R*T/P; 
 	 do{
 		i++;
  		V[i]=R*T/P*(1+B/V[i-1]+C/pow(V[i-1],2));
- 	    printf("µÚ%d´Îµü´úµÄÖµÊÇ%lf\n:",i,V[i]);
- 	   } while((V[i]-V[i-1])<10e-4);
+ 	    printf("ç¬¬%dæ¬¡è¿­ä»£çš„å€¼æ˜¯%lf\n:",i,V[i]);
+ 	   } while(i<=7);
 	}
 	if (c==2)
 	{
-	 printf("ÇëÒÀ´ÎÊäÈë Tc Pc T PÖµ");
+	 printf("è¯·ä¾æ¬¡è¾“å…¥ Tc Pc T På€¼");
 	 scanf("%lf%lf%lf%lf",&Tc,&Pc,&T,&P) ;
 	 V[0]=R*T/P;
-	 printf("V0ÊÇ%f",V[0]) ;
+	 printf("V0æ˜¯%f",V[0]) ;
 	 a=0.42748*pow(R,2)*pow(Tc,2.5)/Pc;
 	 b=0.08664*pow(R,1)*pow(Tc,1)/Pc;
-	 printf("ĞŞÕıÒò×ÓaÊÇ%f bÊÇ%f",a,b);
-	 printf("ÊÇ·ñ²ÉÓÃÅ£¶Ù·¨ :1 yes 2 no") ;
+	 printf("ä¿®æ­£å› å­aæ˜¯%f bæ˜¯%f",a,b);
+	 printf("æ˜¯å¦é‡‡ç”¨ç‰›é¡¿æ³• :1 yes 2 no") ;
 	 scanf("%d",&yn);
         if(yn==2)
 	       {
 		   	do{
 	        	i++;
  		        V[i]=R*T/P+b-a*(V[i-1]-b)/(pow(T,0.5)*P*V[i-1]*(V[i-1]+b));
-                printf("µÚ%d´Îµü´úµÄÖµÊÇ%lf\n:",i,V[i]);
- 	           } while((V[i]-V[i-1])<10e-4);
+                printf("ç¬¬%dæ¬¡è¿­ä»£çš„å€¼æ˜¯%lf\n:",i,V[i]);
+ 	           } while(i<=7);
 	       }
        else
  	   {
@@ -45,13 +45,13 @@ int main()
  		        d=pow(V[i-1],3)-R*T*pow(V[i-1],2)/P-(pow(b,2)+b*R*T/P-a/P/pow(T,0.5))*V[i-1]-a*b/P/pow(T,0.5);
  		        e=3*pow(V[i-1],2)-2*R*T/P*V[i-1]-(pow(b,2)+b*R*T/P-a/P/pow(T,0.5));
  		        V[i]=V[i-1]-d/e;
-                printf("µÚ%d´Îµü´úµÄÖµÊÇ%lf\n:",i,V[i]);
- 	           } while((V[i]-V[i-1])<10e-8);
+                printf("ç¬¬%dæ¬¡è¿­ä»£çš„å€¼æ˜¯%lf\n:",i,V[i]);
+ 	           } while(i<=7);
        }
 	}
    if (c==3)
    {
-     printf("ÇëÒÀ´ÎÊäÈë Tc Pc T P wÖµ");
+     printf("è¯·ä¾æ¬¡è¾“å…¥ Tc Pc T P wå€¼");
 	 scanf("%lf%lf%lf%lf%lf",&Tc,&Pc,&T,&P,&w) ;
 	 	 V[0]=R*T/P; 
    	  m=0.48+1.574*w-0.176*pow(w,2);
@@ -62,10 +62,72 @@ int main()
    	  do{
 	        	i++;
 	             V[i]=R*T/P+b-a*(V[i-1]-b)/(P*V[i-1]*(V[i-1]+b));
-                printf("µÚ%d´Îµü´úµÄÖµÊÇ%lf\n:",i,V[i]); 
-      } while((V[i]-V[i-1])<10e-8);
+                printf("ç¬¬%dæ¬¡è¿­ä»£çš„å€¼æ˜¯%lf\n:",i,V[i]); 
+      } while(i<=7);
    	
    	
    }
+     if (c==4)
+   {
+     printf("è¯·ä¾æ¬¡è¾“å…¥ Tc Pc T P wå€¼");
+	 scanf("%lf%lf%lf%lf%lf",&Tc,&Pc,&T,&P,&w) ;
+	 	 V[0]=R*T/P; 
+   	  m=0.37464+1.54226*w-0.26992*pow(w,2);
+   	   printf("%lf/n",m);
+      a=0.42748*pow(R,2)*pow(Tc,2)/Pc*pow(1+m*(1-pow(T/Tc,0.5)),2);
+	  b=0.07780*pow(R,1)*pow(Tc,1)/Pc;
+	  printf("%lf%lf/n",a,b);
+   	  do{
+	        	i++;
+	             V[i]=R*T/P+b-a*(V[i-1]-b)/(P*V[i-1]*(V[i-1]+b)+b);
+                printf("ç¬¬%dæ¬¡è¿­ä»£çš„å€¼æ˜¯%lf\n:",i,V[i]); 
+      } while(i<=7);
+   }
+      if(c==5)
+   {
+  printf("è¯·ä¾æ¬¡è¾“å…¥ Tc Pc T På€¼");
+	 scanf("%lf%lf%lf",&Tc,&Pc,&T) ;
+	 V[0]=0.000736;
+	 printf("V0æ˜¯%f",V[0]) ;
+	 a=0.42748*pow(R,2)*pow(Tc,2.5)/Pc;
+	 b=0.08664*pow(R,1)*pow(Tc,1)/Pc;
+	 printf("ä¿®æ­£å› å­aæ˜¯%f bæ˜¯%f",a,b);
+	
+ 		       P =R*T/(V[0]-b)-a/(pow(T,0.5)*V[0]*(V[0]+b));
+                printf("ç¬¬%dæ¬¡è¿­ä»£çš„å€¼æ˜¯%lf\n:",i,P);
+ 	          
+	   
+	}
+      if(c==6)
+   {
+   	 V[0]=0.000734;
+   	 printf("è¯·ä¾æ¬¡è¾“å…¥ Tc Pc w  Tå€¼");
+	 scanf("%lf%lf%lf%lf",&Tc,&Pc,&w,&T) ;
+	  m=0.48+1.574*w-0.176*pow(w,2);
+   	   printf("%lf",m);
+      a=0.42748*pow(R,2)*pow(Tc,2)/Pc*pow(1+m*(1-pow(T/Tc,0.5)),2);
+	  b=0.08664*pow(R,1)*pow(Tc,1)/Pc;
+	  printf("%lf%lf/n",a,b);
+	  P=R*T/(V[0]-b)-a/(V[0]*(V[0]+b));
+	  printf("P is %lf\n",P);
+   	
+   } 	
+ if (c==7)
+   {
+     printf("è¯·ä¾æ¬¡è¾“å…¥ Tc Pc T  wå€¼");
+	 scanf("%lf%lf%lf%lf",&Tc,&Pc,&T,&w) ;
+	 	 V[0]=0.000734; 
+   	  m=0.37464+1.54226*w-0.26992*pow(w,2);
+   	   printf("%lf/n",m);
+      a=0.42748*pow(R,2)*pow(Tc,2)/Pc*pow(1+m*(1-pow(T/Tc,0.5)),2);
+	  b=0.07780*pow(R,1)*pow(Tc,1)/Pc;
+	  printf("%lf%lf/n",a,b);
+   	
+	        
+	             P=R*T/(V[0]-b)-a/(V[0]*(V[0]+b)+b*(V[0]-b));
+                printf("ç¬¬%dæ¬¡è¿­ä»£çš„å€¼æ˜¯%lf\n:",i,P); 
+      
+   }
+   
 return 0;
 }
