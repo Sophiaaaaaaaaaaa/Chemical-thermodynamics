@@ -11,7 +11,7 @@ B1=0.139-0.172/pow(Tr,4.2);
 B=R*Tc/Pc*(B0+w*B1);
 	return B;
 }
-/*Prausnitz ¹æÔò  */
+/*Prausnitz è§„åˆ™  */
 double Tcij (double Tci,double Tcj, double Kij)
 {
 	return(pow(Tci*Tcj,0.5)*(1-Kij));
@@ -64,34 +64,42 @@ double Vcij (double Vci,double Vcj)
  {
  	return (y1*b1+y2*b2);
  }
+ double pbhjc (double y1,double y2,double a,double b)
+{
+	return (y1*a+y2*b);
+}
+/*æ™®éåŒ–å…³è”å›¾çš„äºŒå…ƒä½“ç³»æ··åˆè®¡ç®—*/ 
  int main()
  {
  	double y1,y2,T,P,Tc1,Tc2,Pc1,Pc2,Vc1,Vc2,Zc1,Zc2,w1,w2,k12;
  	double Tc12,Vc12,Zc12,Pc12,w;
  	double a11,a22,a12,a;
  	double b1,b2,b;
- 	double B11,B22,B12,B;
- 	double Zmix[20],hmix[20];
- 	double Z;/*ÓÃÓÚÆÕÍ¨»¯¹ØÁªµÄÎ¬ÀïÏµÊı*/ 
+ 	double B11,B22,B12,B,B1;
+ 	double Zmix[20],hmix[20]; /*ç”¨äºR-Kæ–¹ç¨‹ è¿­ä»£çš„Z*/ 
+ 	double Z;/*ç”¨äºæ™®é€šåŒ–å…³è”çš„ç»´é‡Œç³»æ•°*/ 
  	double R=8.314;
+ 	double Pmr,Tmr,wm;/*ç”¨äºæ™®éåŒ–å…³è”å›¾ï¼Œå‚æ•°æŸ¥æ‰¾*/ 
  	double Vm1,Vm2,Vm3;
+ 	double H,S,H1,S1;
+ 	double c1,c2,c3,c4,c5,c6;
  	int i=0;
- 	/* R-K·½³Ì*/ 
- 	printf("ÇëÒÀ´ÎÊäÈë×´Ì¬º¯Êı:");
+ 	/* R-Kæ–¹ç¨‹*/ 
+ 	printf("è¯·ä¾æ¬¡è¾“å…¥çŠ¶æ€å‡½æ•°:");
  	scanf("%lf%lf",&T,&P);
- 	printf("ÇëÊäÈëÁ½×é·Ö¸÷×ÔµÄ°Ù·ÖÊı:\n");
+ 	printf("è¯·è¾“å…¥ä¸¤ç»„åˆ†å„è‡ªçš„ç™¾åˆ†æ•°:\n");
  	scanf("%lf%lf",&y1,&y2);
- 	printf("ÇëÊäÈëÁ½×é·Ö¸÷×ÔµÄTc:\n");
+ 	printf("è¯·è¾“å…¥ä¸¤ç»„åˆ†å„è‡ªçš„Tc:\n");
  	scanf("%lf%lf",&Tc1,&Tc2);
- 	printf("ÇëÊäÈëÁ½×é·Ö¸÷×ÔµÄPc:\n");
+ 	printf("è¯·è¾“å…¥ä¸¤ç»„åˆ†å„è‡ªçš„Pc:\n");
  	scanf("%lf%lf",&Pc1,&Pc2);
-	printf("ÇëÊäÈëÁ½×é·Ö¸÷×ÔµÄVc:\n");
+	printf("è¯·è¾“å…¥ä¸¤ç»„åˆ†å„è‡ªçš„Vc:\n");
  	scanf("%lf%lf",&Vc1,&Vc2);
-	printf("ÇëÊäÈëÁ½×é·Ö¸÷×ÔµÄZc:\n");
+	printf("è¯·è¾“å…¥ä¸¤ç»„åˆ†å„è‡ªçš„Zc:\n");
  	scanf("%lf%lf",&Zc1,&Zc2);
- 	printf("ÇëÊäÈëÁ½×é·Ö¸÷×ÔµÄw:\n");
+ 	printf("è¯·è¾“å…¥ä¸¤ç»„åˆ†å„è‡ªçš„w:\n");
  	scanf("%lf%lf",&w1,&w2);
- 	printf("ÇëÊäÈëÁ½×é·ÖÖ®¼äµÄK12:\n");
+ 	printf("è¯·è¾“å…¥ä¸¤ç»„åˆ†ä¹‹é—´çš„K12:\n");
  	scanf("%lf",&k12);
  	Tc12=Tcij(Tc1,Tc2,k12);
  	Vc12=Vcij(Vc1,Vc2);
@@ -117,17 +125,35 @@ double Vcij (double Vci,double Vcj)
 	 }while(i>=10);
 	 	printf("zmix is %lf",Zmix[i]) ;
 	 Vm1=Zmix[i]*R*T/P;
- /*ÆÕ±é»¯Î¬ÀïÏµÊı*/
+ /*æ™®éåŒ–ç»´é‡Œç³»æ•°*/
  	
  	B11=pitzer(Tc1,Pc1,T,w1);
  	B22=pitzer(Tc2,Pc2,T,w2);
  	B12=pitzer(Tc12,Pc12,T,w) ;
  	B=Bmix(y1,y2,B11,B22,B12);
+ 	printf("B11 B22 B12 is%lf%lf%lf",B11,B22,B12 );
  	Z=1+B*P/R/T;
  	printf("Z is %lf",Z) ;
  	Vm2=Z*R*T/P;	
- 	printf("ÓÉR-K·½³Ì¼ÆËãµÃÀ´µÄVm ÊÇ:%lf\n",Vm1);
- 	printf("ÓÉÆÕ±é»¯Î¬ÀïÏµÊı¼ÆËãµÃÀ´µÄVm ÊÇ:%lf\n",Vm2);
+ 	printf("ç”±R-Kæ–¹ç¨‹è®¡ç®—å¾—æ¥çš„Vm æ˜¯:%lf\n",Vm1);
+ 	printf("ç”±æ™®éåŒ–ç»´é‡Œç³»æ•°è®¡ç®—å¾—æ¥çš„Vm æ˜¯:%lf\n",Vm2);
  	
+ 	H=R*T*((-1.5)*(a/b/R/pow(T,1.5))*log(1+b*P/Z/R/T)+Z-1);
+ 	S=log(Z*(1-b*P/Z/R/T))-0.5*a/b/R/pow(T,1.5)*log(1+b*P/Z/R/T);
+ 	printf("ç”±R-Kæ–¹ç¨‹è®¡ç®—å¾—æ¥çš„å‰©ä½™ç„“ å‰©ä½™ç†µï¼šH is %lf,S is %lf:",H,S);
+    c1=0.675/pow(T/Tc1,2.6);
+    c2=0.722/pow(T/Tc1,5.2);
+    c3=0.675/pow(T/Tc2,2.6);
+    c4=0.722/pow(T/Tc2,5.2);
+    c5=0.675/pow(T/Tc12,2.6);
+    c6=0.722/pow(T/Tc12,5.2);
+    B1=y1*y1*R/Pc1*(c1+w1*c2)+2*y1*y2*R/Pc12*(c5+w*c6)+y2*y2*R/Pc2*(c3+w2*c4);
+    H1=P*T*(B/T-B1);
+    S1=-P*B1;
+    printf("ç”±æ™®éåŒ–ç»´é‡Œæ–¹ç¨‹è®¡ç®—å¾—æ¥çš„å‰©ä½™ç„“ å‰©ä½™ç†µï¼šH1 is %lf,S1 is %lf:\n" ,H1,S1);
+    Pmr=P/pbhjc(y1,y2,Pc1,Pc2);
+    Tmr=T/pbhjc(y1,y2,Tc1,Tc2);
+    wm=pbhjc(y1,y2,w1,w2);
+    printf("Pmr,Tmr,w is %lf %lf %lf",Pmr,Tmr,wm);
  return 0;	
  }
