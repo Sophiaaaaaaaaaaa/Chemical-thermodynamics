@@ -84,6 +84,9 @@ double Vcij (double Vci,double Vcj)
  	double H,S,H1,S1;
  	double c1,c2,c3,c4,c5,c6;
  	int i=0;
+ 	double fi1,fi2,derta,fia,fib;
+ 	double f1,f2,fa,fb;
+ 	double rk1,rk2;
  	/* R-K方程*/ 
  	printf("请依次输入状态函数:");
  	scanf("%lf%lf",&T,&P);
@@ -105,13 +108,13 @@ double Vcij (double Vci,double Vcj)
  	Vc12=Vcij(Vc1,Vc2);
  	Zc12=Zcij(Zc1,Zc2);
  	Pc12=Pcij(Zc12,Tc12,Vc12);
- 	printf("Tc12,Vc12,Pc12 is %lf %lf %lf",Tc12,Vc12,Pc12);
+ 	printf("Tc12,Vc12,Pc12 is %lf %lf %lf\n",Tc12,Vc12,Pc12);
  	w=Wcij (w1,w2);
  	a11=acij(Tc1,Pc1);
  	a12=acij(Tc2,Pc2);
  	a22=acij(Tc12,Pc12);
  	a=amix(y1,y2,a11,a12,a22);
- 	printf("a11 a12 a22 amix is %lf %lf %lf %lf",a11,a12,a22,a) ;
+ 	printf("a11 a12 a22 amix is %lf %lf %lf %lf\n",a11,a12,a22,a) ;
  	b1=bci(Tc1,Pc1);
  	b2=bci(Tc2,Pc2);
  	b=bmix(y1,y2,b1,b2);
@@ -123,24 +126,38 @@ double Vcij (double Vci,double Vcj)
 	 	i++;
 	 	Zmix[i]=1/(1-hmix[i-1])-a/(b*R*pow(T,1.5))*(hmix[i-1]/(1+hmix[i-1]));
 	 }while(i>=10);
-	 	printf("zmix is %lf",Zmix[i]) ;
+	 	printf("zmix is %lf\n",Zmix[i]) ;
 	 Vm1=Zmix[i]*R*T/P;
+	 rk1=log(Vm1/(Vm1-b))+b1/(Vm1-b)-2*(y1*a11+y2*a12)/b/R/pow(T,1.5)*log(Vm1+b/Vm1)+a*b1/(pow(b,2)*R*pow(T,1.5))*(log((Vm1+b)/Vm1)-(b/(Vm1+b)))-log(Zmix[i]);
+	 rk2=log(Vm1/(Vm1-b))+b1/(Vm1-b)-2*(y1*a12+y2*a22)/b/R/pow(T,1.5)*log(Vm1+b/Vm1)+a*b2/(pow(b,2)*R*pow(T,1.5))*(log((Vm1+b)/Vm1)-(b/(Vm1+b)))-log(Zmix[i]);
+	 fa=pow(2.71828,rk1)*P;
+	 fb=pow(2.71828,rk2)*P;
+	 printf("fa fb is %lf %lf\n",fa,fb);
+	 
+	 
  /*普遍化维里系数*/
  	
  	B11=pitzer(Tc1,Pc1,T,w1);
  	B22=pitzer(Tc2,Pc2,T,w2);
  	B12=pitzer(Tc12,Pc12,T,w) ;
  	B=Bmix(y1,y2,B11,B22,B12);
- 	printf("B11 B22 B12 is%lf%lf%lf",B11,B22,B12 );
+ 	printf("B11 B22 B12 Bmix is%lf%lf%lf%lf\n",B11,B22,B12,B );
+ 	derta=2*B12-B11-B22;
+ 	fi1=pow(2.71828,(P/R/T*(B11+y1*y1*derta)));
+ 	fi2=pow(2.71828,(P/R/T*(B22+y2*y2*derta)));
+ 	printf("derta fi1 fi2 is %lf%lf%lf\n",derta,fi1,fi2);
+ 	f1=fi1*y1*P;
+ 	f2=fi2*y2*P;
+ 	printf("f1 f2 is %lf  %lf\n",f1,f2);
  	Z=1+B*P/R/T;
- 	printf("Z is %lf",Z) ;
+ 	printf("Z is %lf\n",Z) ;
  	Vm2=Z*R*T/P;	
  	printf("由R-K方程计算得来的Vm 是:%lf\n",Vm1);
  	printf("由普遍化维里系数计算得来的Vm 是:%lf\n",Vm2);
  	
  	H=R*T*((-1.5)*(a/b/R/pow(T,1.5))*log(1+b*P/Z/R/T)+Z-1);
  	S=log(Z*(1-b*P/Z/R/T))-0.5*a/b/R/pow(T,1.5)*log(1+b*P/Z/R/T);
- 	printf("由R-K方程计算得来的剩余焓 剩余熵：H is %lf,S is %lf:",H,S);
+ 	printf("由R-K方程计算得来的剩余焓 剩余熵：H is %lf,S is %lf:\n",H,S);
     c1=0.675/pow(T/Tc1,2.6);
     c2=0.722/pow(T/Tc1,5.2);
     c3=0.675/pow(T/Tc2,2.6);
@@ -156,4 +173,4 @@ double Vcij (double Vci,double Vcj)
     wm=pbhjc(y1,y2,w1,w2);
     printf("Pmr,Tmr,w is %lf %lf %lf",Pmr,Tmr,wm);
  return 0;	
- }
+}
