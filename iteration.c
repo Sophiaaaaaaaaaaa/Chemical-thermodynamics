@@ -3,6 +3,7 @@
 int main()
 {
 	double Vm,B,C,R,T,P,Tc,Pc,w,a,b,d,e,m,A;
+	double fi,Z,h,f;
 	R=8.314;
 	float V[500];
 	int i=0,c,yn;
@@ -37,6 +38,11 @@ int main()
  		        V[i]=R*T/P+b-a*(V[i-1]-b)/(pow(T,0.5)*P*V[i-1]*(V[i-1]+b));
                 printf("第%d次迭代的值是%lf\n:",i,V[i]);
  	           } while(i<=7);
+ 	           h=b/V[i] ;
+ 	           Z=1/(1-h);
+ 	           fi=(Z-1)-log(Z-P*b/R/T)-a/b/R/pow(T,1.5)*log(1+b/V[i]);
+ 	           f=P*pow(2.71828,fi);
+ 	           printf("h is %lf Z is %lf fi is %lf f is %lf",h,Z,fi,f);
 	       }
        else
  	   {
@@ -48,7 +54,7 @@ int main()
                 printf("第%d次迭代的值是%lf\n:",i,V[i]);
  	           } while(i<=7);
        }
-	}
+	   }
    if (c==3)
    {
      printf("请依次输入 Tc Pc T P w值");
