@@ -3,7 +3,7 @@ import math
 from matplotlib import pyplot as plt
 from sympy import *
 x=Symbol('x')
-#函数输入区
+#函数输入在此输入不同的函数
 f=x*x*x
 N=x-f/diff(f)
 #初值设置
