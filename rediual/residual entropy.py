@@ -56,19 +56,34 @@ T1,P1,Tc1,Pc1,w1,A,B,C=map(float,a[0][0:8])
 T2,P2,Tc2,Pc2,w2,A,B,C=map(float,a[1][0:8])
 
 #-----------------------------------------------------------------------
-print(SR1,SR2)
+SR1=residual_entropy(T1,P1,Tc1,Pc1,w1)
+SR2=residual_entropy(T2,P2,Tc2,Pc2,w2)
 T = symbols('T')
 S1=integrate( 8.314*(A/T+B+C*T),(T,T1,T2))-8.314*log(P2/P1)
+
+S=S1-SR1+SR2
+top=T2
+bottom=T1
+print(S)
+middle=(top+bottom)/2
+S1=integrate( 8.314*(A/T+B+C*T),(T,T1,middle))-8.314*log(P2/P1)
+
 S=S1-SR1+SR2
 print(S)
+#--------二分法--------------
 while ((math.fabs(S)-0)>0.00001):
-    if (S<0):
-        T2=(T1+T2)/2;
+    if (S>0):
+
+        top=(top+bottom)/2
+        T2=(top+bottom)/2
 
     else :
-        T1=(T1+T2)/2
-    print(T1,T2)
-    SR2 = residual_entropy(T2, P2, Tc2, Pc2, w2)
-    S1= integrate(8.314 * (A / T + B + C * T), (T, T1, T2)) - 8.314 * log(P2 / P1)
+        bottom=(top+bottom)/2
+        T2=(top+bottom)/2
+    print(T2,bottom)
+    S1 = integrate(8.314 * (A / T +B + C * T), (T, T1, T2)) - 8.314 * log(P2 / P1)
+
     S = S1 -SR1 + SR2
-    print(S,SR1,SR2)
+    print(S1,SR1,SR2)
+print(S)
+
