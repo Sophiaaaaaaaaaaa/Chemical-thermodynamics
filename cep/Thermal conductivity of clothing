@@ -1,0 +1,116 @@
+import matplotlib.pyplot as plt
+import matplotlib.colors
+import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+
+
+def midpoints(x):
+   sl = ()
+   for i in range(x.ndim):
+       x = (x[sl + np.index_exp[:-1]] + x[sl + np.index_exp[1:]]) / 2.0
+       sl += np.index_exp[:]
+   return x
+#这是你的数据输入区
+T=37
+tc=0
+r0=0.019
+r1=0.049
+r2=0.051
+r3=0.061
+'''r2=0.059
+r3=0.061'''
+gamma1=0.0432
+gamma2=0.052
+gamma3=0.071
+'''gamma3=0.052
+gamma2=0.071'''
+
+Phi=(T-tc)/((np.log(r1/r0)/(2*3.14*gamma1*1.6))+(np.log(r2/r1)/(2*3.14*gamma1*1.6))+(np.log(r3/r2)/(2*3.14*gamma1*1.6)))
+print(Phi)
+dertat1=(T-tc)*((np.log(r1/r0)/(2*3.14*gamma1*1.6))/((np.log(r1/r0)/(2*3.14*gamma1*1.6))+(np.log(r2/r1)/(2*3.14*gamma2*1.6))+(np.log(r3/r2)/(2*3.14*gamma3*1.6))))
+dertat2=(T-tc)*((np.log(r2/r1)/(2*3.14*gamma2*1.6))/((np.log(r1/r0)/(2*3.14*gamma1*1.6))+(np.log(r2/r1)/(2*3.14*gamma2*1.6))+(np.log(r3/r2)/(2*3.14*gamma3*1.6))))
+dertat3=(T-tc)*((np.log(r3/r2)/(2*3.14*gamma3*1.6))/((np.log(r1/r0)/(2*3.14*gamma1*1.6))+(np.log(r2/r1)/(2*3.14*gamma2*1.6))+(np.log(r3/r2)/(2*3.14*gamma3*1.6))))
+t1=T-dertat1
+t2=t1-dertat2
+t3=t2-dertat3
+print(t1,t2,t3)
+
+x1=np.linspace(r0,r1,20)
+
+y1=[T-(T-t1)/np.log(r1/r0)*np.log(i/r0) for i in x1]
+
+plt.scatter(x1,y1,s=5, marker='o',label='gamma1=0.043')
+x2=np.linspace(r1,r2,5)
+
+y2=[t1-(t1-t2)/np.log(r2/r1)*np.log(i/r1) for i in x2]
+
+plt.scatter(x2,y2,s=2, marker='o',label='gamma2=0.052')
+
+x3=np.linspace(r2,r3,10)
+
+y3=[t2-(t2-t3)/np.log(r3/r2)*np.log(i/r2) for i in x3]
+
+plt.scatter(x3,y3,s=10, marker='x', label='gamma3=0.071')
+plt.legend( loc=3)
+plt.xlabel('r')
+plt.ylabel('T')
+plt.show()  #绘制图像
+
+# prepare some coordinates, and attach rgb values to each
+r, theta, z = np.mgrid[0:0.02:11j, 0:np.pi*1.5:25j, 0:1.6:11j]
+x = r*np.cos(theta)
+y = r*np.sin(theta)
+rc, thetac, zc = midpoints(r), midpoints(theta), midpoints(z)
+
+
+r1, theta1, z1 = np.mgrid[0.010:0.018:11j, 0:np.pi*1.5:25j, 0:1.6:11j]
+x1 = r1*np.cos(theta1)
+y1 = r1*np.sin(theta1)
+rc1, thetac1, zc1 = midpoints(r1), midpoints(theta1), midpoints(z1)
+fig = plt.figure()
+# define a wobbly torus about [0.7, *, 0]
+#sphere = (rc )**2 > 1.8**2 #+ (zc + 0.2*np.cos(thetac*2))**2
+sphere = (rc )**2 > 0.018**2
+#sphere1 =(rc )**2 < 1.7**2  #+ (zc + 0.2*np.cos(thetac*2))**2
+
+sphere1 =(rc1 )**2 > 0.015**2
+sphere2 =(rc1 )**2 < 0.015**2
+# combine the color components
+hsv = np.zeros(sphere.shape + (3,))
+hsv[..., 0] = 0.5#thetac / (np.pi*2)
+hsv[..., 1] = 0.5#thetac / (np.pi*2)#rc
+hsv[..., 2] = 0.5#thetac / (np.pi*2)#zc + 0.5
+colors = matplotlib.colors.hsv_to_rgb(hsv)
+hsv1 = np.zeros(sphere1.shape + (3,))
+hsv1[..., 0] =49.5/360#thetac / (np.pi*2)
+hsv1[..., 1] = 0.941#thetac / (np.pi*2)#rc
+hsv1[..., 2] = 0.941#thetac / (np.pi*2)#zc + 0.5
+colors1 = matplotlib.colors.hsv_to_rgb(hsv1)
+hsv2 = np.zeros(sphere1.shape + (3,))
+hsv2[..., 0] =1#thetac / (np.pi*2)
+hsv2[..., 1] = 1#thetac / (np.pi*2)#rc
+hsv2[..., 2] = 0.5#thetac / (np.pi*2)#zc + 0.5
+colors2 = matplotlib.colors.hsv_to_rgb(hsv2)
+# and plot everything
+
+ax1 = fig.gca(projection='3d')
+ax1.voxels(x, y, z, sphere,
+         facecolors=colors,
+         edgecolors=np.clip(2*colors - 0, 0, 1),  # brighter
+         linewidth=0.5,
+          )
+ax2 = fig.gca(projection='3d')
+ax2.voxels(x1, y1, z1, sphere1,
+         facecolors=colors1,
+         edgecolors=np.clip(2*colors1 - 0, 0, 1),  # brighter
+         linewidth=0.5,
+          )
+ax3 = fig.gca(projection='3d')
+ax3.voxels(x1, y1, z1, sphere2,
+         facecolors=colors2,
+         edgecolors=np.clip(2*colors2 - 0, 0, 1),  # brighter
+         linewidth=0.5,
+          )
+plt.show()
+
+
